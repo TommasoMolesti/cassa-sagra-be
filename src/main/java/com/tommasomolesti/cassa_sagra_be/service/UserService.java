@@ -24,4 +24,8 @@ public class UserService {
     public void saveUser(User u) {
         userRepository.save(u);
     }
+
+    public void deleteUser(Integer id) {
+        userRepository.deleteById(id);
+    }
 }

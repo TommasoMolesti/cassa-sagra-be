@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @Controller
-@RequestMapping(path = "/users")
+@RequestMapping(path = "/user")
 public class UserController {
     @Autowired
     private UserService userService;
 
     @GetMapping(path = "")
-    public @ResponseBody Iterable<User> getAllUsers() {
+    public @ResponseBody Iterable<User> getUsers() {
         return userService.getAllUsers();
     }
 
@@ -28,14 +28,23 @@ public class UserController {
         if (userOptional.isPresent()) {
             return new ResponseEntity<>(userOptional.get(), HttpStatus.OK);
         } else {
+            // TODO : gestire il messaggio di ritorno
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @PostMapping(path = "/add")
-    public @ResponseBody String addNewUser(@RequestBody User u) {
+    @PostMapping(path = "")
+    public @ResponseBody String addUser(@RequestBody User u) {
         userService.saveUser(u);
+        // TODO : gestire il messaggio di ritorno
         return "User created";
+    }
+
+    @DeleteMapping(path = "{id}" )
+    public @ResponseBody String deleteUser(@PathVariable Integer id) {
+        userService.deleteUser(id);
+        // TODO : gestire il messaggio di ritorno
+        return "User deleted";
     }
 }
 
