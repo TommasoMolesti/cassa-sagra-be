@@ -1,38 +1,23 @@
 package com.tommasomolesti.cassa_sagra_be.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.UUID;
 
 
 @Entity
-@Table(name = "users", schema = "cassa_sagra")
+@Getter
+@Setter
+@Table(name = "users")
+@NoArgsConstructor
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
-    @Column(name = "email")
+    @Column(length = 50, nullable = false, unique = true)
     private String email;
-
-    public User() {}
-
-    public User(Integer id, String email) {
-        this.id = id;
-        this.email = email;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 }
