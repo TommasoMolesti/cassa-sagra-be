@@ -1,5 +1,6 @@
 package com.tommasomolesti.cassa_sagra_be.service;
 
+import com.tommasomolesti.cassa_sagra_be.dto.RegisterRequestDTO;
 import com.tommasomolesti.cassa_sagra_be.dto.UserRequestDTO;
 import com.tommasomolesti.cassa_sagra_be.dto.UserResponseDTO;
 import com.tommasomolesti.cassa_sagra_be.exception.EmailAlreadyExistsException;
@@ -7,6 +8,9 @@ import com.tommasomolesti.cassa_sagra_be.exception.UserNotFoundException;
 import com.tommasomolesti.cassa_sagra_be.mapper.UserMapper;
 import com.tommasomolesti.cassa_sagra_be.model.User;
 import com.tommasomolesti.cassa_sagra_be.repository.UserRepository;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,10 +20,12 @@ import java.util.UUID;
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper) {
+    public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<UserResponseDTO> getUsers() {
@@ -27,14 +33,19 @@ public class UserService {
         return users.stream().map(userMapper::toDTO).toList();
     }
 
-    public UserResponseDTO createUser(UserRequestDTO userRequestDTO) {
-        if (userRepository.existsByEmail(userRequestDTO.getEmail())) {
-            throw new EmailAlreadyExistsException("A user with this email already exists : " + userRequestDTO.getEmail());
+    public UserResponseDTO registerUser(RegisterRequestDTO registerRequest) {
+        if (userRepository.existsByEmail(registerRequest.getEmail())) {
+            throw new EmailAlreadyExistsException("Email '" + registerRequest.getEmail() + "' is already taken.");
         }
 
-        User userToSave = userMapper.toModel(userRequestDTO);
-        User newUser = userRepository.save(userToSave);
-        return userMapper.toDTO(newUser);
+        User newUser = new User();
+        newUser.setEmail(registerRequest.getEmail());
+
+        newUser.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+
+        User savedUser = userRepository.save(newUser);
+
+        return userMapper.toDTO(savedUser);
     }
 
     public UserResponseDTO getUserById(UUID id) {
@@ -48,5 +59,10 @@ public class UserService {
         userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
         userRepository.deleteById(id);
+    }
+
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }

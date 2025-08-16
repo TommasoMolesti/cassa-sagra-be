@@ -30,15 +30,6 @@ public class UserController {
         return ResponseEntity.ok().body(users);
     }
 
-    @PostMapping
-    @Operation(summary = "Create a new User")
-    public ResponseEntity<UserResponseDTO> createUser(
-            @Validated({Default.class}) @RequestBody UserRequestDTO userRequestDTO
-    ) {
-        UserResponseDTO userResponseDTO = userService.createUser(userRequestDTO);
-        return ResponseEntity.ok().body(userResponseDTO);
-    }
-
     @GetMapping("/{id}")
     @Operation(summary = "Get a User by ID")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable UUID id) {
