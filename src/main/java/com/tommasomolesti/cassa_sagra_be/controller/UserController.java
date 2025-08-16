@@ -7,8 +7,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.groups.Default;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,20 +30,13 @@ public class UserController {
         return ResponseEntity.ok().body(users);
     }
 
-//    @PostMapping
-//    @Operation(summary = "Create a new User")
-//    public ResponseEntity<UserResponseDTO> createUser(
-//            @Validated({Default.class}) @RequestBody UserRequestDTO userRequestDTO
-//    ) {
-//        UserResponseDTO userResponseDTO = userService.createUser(userRequestDTO);
-//        return ResponseEntity.ok().body(userResponseDTO);
-//    }
-
-    @PostMapping("/sync-profile")
-    @Operation(summary = "Creates a local user profile after Supabase signup")
-    public ResponseEntity<UserResponseDTO> syncUserProfile(@AuthenticationPrincipal Jwt jwt) {
-        UserResponseDTO newUser = userService.createOrUpdateUserFromJwt(jwt);
-        return ResponseEntity.ok(newUser);
+    @PostMapping
+    @Operation(summary = "Create a new User")
+    public ResponseEntity<UserResponseDTO> createUser(
+            @Validated({Default.class}) @RequestBody UserRequestDTO userRequestDTO
+    ) {
+        UserResponseDTO userResponseDTO = userService.createUser(userRequestDTO);
+        return ResponseEntity.ok().body(userResponseDTO);
     }
 
     @GetMapping("/{id}")
