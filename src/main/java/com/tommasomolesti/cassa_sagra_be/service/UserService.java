@@ -7,6 +7,7 @@ import com.tommasomolesti.cassa_sagra_be.exception.UserNotFoundException;
 import com.tommasomolesti.cassa_sagra_be.mapper.UserMapper;
 import com.tommasomolesti.cassa_sagra_be.model.User;
 import com.tommasomolesti.cassa_sagra_be.repository.UserRepository;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,14 +28,26 @@ public class UserService {
         return users.stream().map(userMapper::toDTO).toList();
     }
 
-    public UserResponseDTO createUser(UserRequestDTO userRequestDTO) {
-        if (userRepository.existsByEmail(userRequestDTO.getEmail())) {
-            throw new EmailAlreadyExistsException("A user with this email already exists : " + userRequestDTO.getEmail());
-        }
+//    public UserResponseDTO createUser(UserRequestDTO userRequestDTO) {
+//        if (userRepository.existsByEmail(userRequestDTO.getEmail())) {
+//            throw new EmailAlreadyExistsException("A user with this email already exists : " + userRequestDTO.getEmail());
+//        }
+//
+//        User userToSave = userMapper.toModel(userRequestDTO);
+//        User newUser = userRepository.save(userToSave);
+//        return userMapper.toDTO(newUser);
+//    }
 
-        User userToSave = userMapper.toModel(userRequestDTO);
-        User newUser = userRepository.save(userToSave);
-        return userMapper.toDTO(newUser);
+    public UserResponseDTO createOrUpdateUserFromJwt(Jwt jwt) {
+        UUID id = UUID.fromString(jwt.getSubject());
+        String email = jwt.getClaimAsString("email");
+
+        User user = userRepository.findById(id).orElse(new User());
+        user.setId(id);
+        user.setEmail(email);
+
+        User savedUser = userRepository.save(user);
+        return userMapper.toDTO(savedUser);
     }
 
     public UserResponseDTO getUserById(UUID id) {
