@@ -1,7 +1,6 @@
 package com.tommasomolesti.cassa_sagra_be.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,7 +12,6 @@ import java.util.UUID;
 
 
 @Entity
-@Getter
 @Setter
 @Table(name = "users")
 @NoArgsConstructor
@@ -27,6 +25,14 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private String password;
+
+    public UUID getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
