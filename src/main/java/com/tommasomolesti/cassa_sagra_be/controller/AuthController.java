@@ -6,14 +6,16 @@ import com.tommasomolesti.cassa_sagra_be.dto.RegisterRequestDTO;
 import com.tommasomolesti.cassa_sagra_be.dto.UserResponseDTO;
 import com.tommasomolesti.cassa_sagra_be.security.JwtService;
 import com.tommasomolesti.cassa_sagra_be.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import com.tommasomolesti.cassa_sagra_be.model.User;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/auth")
@@ -44,10 +46,37 @@ public class AuthController {
                 )
         );
 
-        UserDetails user = userService.loadUserByUsername(loginRequest.getEmail());
+        UserDetails userDetails = userService.loadUserByUsername(loginRequest.getEmail());
+        String token = jwtService.generateToken(userDetails);
 
-        String token = jwtService.generateToken(user);
+        User authenticatedUser = (User) userDetails;
 
-        return ResponseEntity.ok(new LoginResponseDTO(token));
+        LoginResponseDTO response = new LoginResponseDTO(
+                authenticatedUser.getId().toString(),
+                token,
+                authenticatedUser.getEmail()
+        );
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/get-user")
+    public ResponseEntity<LoginResponseDTO> getUserFromToken(
+        @AuthenticationPrincipal User currentUser,
+        HttpServletRequest request
+    ) {
+        final String authHeader = request.getHeader("Authorization");
+        String token = null;
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7);
+        }
+
+        String id = currentUser.getId().toString();
+        String email = currentUser.getEmail();
+
+        LoginResponseDTO response = new LoginResponseDTO(id, email, token);
+
+        return ResponseEntity.ok(response);
     }
 }
