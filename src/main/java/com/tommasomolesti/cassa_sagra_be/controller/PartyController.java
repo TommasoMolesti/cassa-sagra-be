@@ -24,9 +24,10 @@ public class PartyController {
         this.partyService = partyService;
     }
 
-    @GetMapping("/list/{userId}")
+    @GetMapping
     @Operation(summary = "Get User's Parties")
-    public ResponseEntity<List<PartyResponseDTO>> getUserParties(@PathVariable UUID userId) {
+    public ResponseEntity<List<PartyResponseDTO>> getUserParties(@AuthenticationPrincipal User currentUser) {
+        UUID userId = currentUser.getId();
         List<PartyResponseDTO> parties = partyService.getUserParties(userId);
         return ResponseEntity.ok().body(parties);
     }
@@ -36,13 +37,23 @@ public class PartyController {
     public ResponseEntity<PartyResponseDTO> createParty(
             @RequestBody PartyRequestDTO partyRequest,
             @AuthenticationPrincipal User currentUser
-            ) {
+    ) {
         UUID creatorId = currentUser.getId();
         PartyResponseDTO newParty = partyService.createParty(partyRequest, creatorId);
         return ResponseEntity.ok(newParty);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<PartyResponseDTO> updateParty(
+            @PathVariable Integer id,
+            @RequestBody PartyRequestDTO partyRequest,
+            @AuthenticationPrincipal User currentUser
+    ) {
+        UUID creatorId = currentUser.getId();
+        PartyResponseDTO updatedParty = partyService.updateParty(id, partyRequest, creatorId);
+        return ResponseEntity.ok(updatedParty);
+    }
+
     // TODO
     // - party deleting
-    // - party info updating
 }
