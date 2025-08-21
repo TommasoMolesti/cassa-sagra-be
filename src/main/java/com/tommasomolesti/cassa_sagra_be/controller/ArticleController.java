@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -35,6 +36,16 @@ public class ArticleController {
         return ResponseEntity.ok(newArticle);
     }
 
+    @GetMapping("/list/{partyId}")
+    public ResponseEntity<List<ArticleResponseDTO>> getArticleList(
+            @PathVariable Integer partyId,
+            @AuthenticationPrincipal User currentUser
+    ) {
+        UUID userId = currentUser.getId();
+        List<ArticleResponseDTO> articles = articleService.getPartyArticles(userId, partyId);
+        return ResponseEntity.ok().body(articles);
+    }
+
     @GetMapping("{id}")
     @Operation(summary = "Get an Article by ID")
     public ResponseEntity<ArticleResponseDTO> getArticleById(
@@ -42,7 +53,6 @@ public class ArticleController {
             @AuthenticationPrincipal User authenticatedUser
     ) {
         UUID creatorId = authenticatedUser.getId();
-
         ArticleResponseDTO articleResponseDTO = articleService.getArticleById(id, creatorId);
         return ResponseEntity.ok().body(articleResponseDTO);
     }

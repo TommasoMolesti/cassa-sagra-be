@@ -1,13 +1,10 @@
 package com.tommasomolesti.cassa_sagra_be.controller;
 
-import com.tommasomolesti.cassa_sagra_be.dto.UserRequestDTO;
 import com.tommasomolesti.cassa_sagra_be.dto.UserResponseDTO;
 import com.tommasomolesti.cassa_sagra_be.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.groups.Default;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,6 +37,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a User")
     public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
+        // TODO : remove all the parties, articles, orders
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }

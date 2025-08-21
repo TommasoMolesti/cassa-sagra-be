@@ -13,7 +13,9 @@ import com.tommasomolesti.cassa_sagra_be.repository.ArticleRepository;
 import com.tommasomolesti.cassa_sagra_be.repository.PartyRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ArticleService {
@@ -51,6 +53,19 @@ public class ArticleService {
         Article savedArticle = articleRepository.save(newArticle);
 
         return articleMapper.toDTO(savedArticle);
+    }
+
+    public List<ArticleResponseDTO> getPartyArticles(UUID userId, Integer partyId) {
+        Party party = partyRepository.findById(partyId)
+                .orElseThrow(() -> new PartyNotFoundException("Party not found with id: " + partyId));
+
+        if(!party.getCreator().getId().equals(userId)) {
+            throw new AccessDeniedException("User is not authorized to modify this party");
+        }
+
+        return party.getArticles().stream()
+                .map(articleMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     public ArticleResponseDTO getArticleById(Integer id, UUID authenticatedUserId) {

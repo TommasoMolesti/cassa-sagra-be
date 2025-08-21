@@ -6,6 +6,7 @@ import com.tommasomolesti.cassa_sagra_be.dto.RegisterRequestDTO;
 import com.tommasomolesti.cassa_sagra_be.dto.UserResponseDTO;
 import com.tommasomolesti.cassa_sagra_be.security.JwtService;
 import com.tommasomolesti.cassa_sagra_be.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,10 +16,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/auth")
+@Tag(name = "Authentication")
 public class AuthController {
 
     private final UserService userService;
