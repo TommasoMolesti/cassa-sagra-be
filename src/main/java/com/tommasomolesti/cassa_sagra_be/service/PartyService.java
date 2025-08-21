@@ -2,6 +2,8 @@ package com.tommasomolesti.cassa_sagra_be.service;
 
 import com.tommasomolesti.cassa_sagra_be.dto.PartyRequestDTO;
 import com.tommasomolesti.cassa_sagra_be.dto.PartyResponseDTO;
+import com.tommasomolesti.cassa_sagra_be.exception.AccessDeniedException;
+import com.tommasomolesti.cassa_sagra_be.exception.PartyNotFoundException;
 import com.tommasomolesti.cassa_sagra_be.exception.UserNotFoundException;
 import com.tommasomolesti.cassa_sagra_be.mapper.PartyMapper;
 import com.tommasomolesti.cassa_sagra_be.model.Party;
@@ -41,5 +43,24 @@ public class PartyService {
         Party savedParty = partyRepository.save(newParty);
 
         return partyMapper.toDTO(savedParty);
+    }
+
+    public PartyResponseDTO updateParty(
+            Integer partyId,
+            PartyRequestDTO partyRequest,
+            UUID authenticatedUserId
+    ) {
+        Party partyToUpdate = partyRepository.findById(partyId)
+                .orElseThrow(() -> new PartyNotFoundException("Party not found with id: " + partyId));
+
+        if(!partyToUpdate.getCreator().getId().equals(authenticatedUserId)) {
+            throw new AccessDeniedException("User is not authorized to modify this party");
+        }
+
+        partyToUpdate.setName(partyRequest.getName());
+
+        Party updatedParty = partyRepository.save(partyToUpdate);
+
+        return partyMapper.toDTO(updatedParty);
     }
 }
