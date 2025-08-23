@@ -10,6 +10,7 @@ import com.tommasomolesti.cassa_sagra_be.model.Party;
 import com.tommasomolesti.cassa_sagra_be.model.User;
 import com.tommasomolesti.cassa_sagra_be.repository.PartyRepository;
 import com.tommasomolesti.cassa_sagra_be.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -62,5 +63,17 @@ public class PartyService {
         Party updatedParty = partyRepository.save(partyToUpdate);
 
         return partyMapper.toDTO(updatedParty);
+    }
+
+    @Transactional
+    public void deleteParty(Integer partyId, UUID authenticatedUserId) {
+        Party party = partyRepository.findById(partyId)
+                .orElseThrow(() -> new PartyNotFoundException("Party not found with id: " + partyId));
+
+        if (!party.getCreator().getId().equals(authenticatedUserId)) {
+            throw new AccessDeniedException("User is not authorized to delete this party");
+        }
+
+        partyRepository.delete(party);
     }
 }

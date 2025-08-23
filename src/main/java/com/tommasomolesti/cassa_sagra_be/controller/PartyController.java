@@ -54,6 +54,14 @@ public class PartyController {
         return ResponseEntity.ok(updatedParty);
     }
 
-    // TODO
-    // - party deleting
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteParty(
+            @PathVariable Integer id,
+            @AuthenticationPrincipal User currentUser
+    ) {
+        UUID creatorId = currentUser.getId();
+        partyService.deleteParty(id, creatorId);
+
+        return ResponseEntity.noContent().build();
+    }
 }
