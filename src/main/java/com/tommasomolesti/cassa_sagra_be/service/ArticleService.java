@@ -4,11 +4,14 @@ import com.tommasomolesti.cassa_sagra_be.dto.ArticleRequestDTO;
 import com.tommasomolesti.cassa_sagra_be.dto.ArticleResponseDTO;
 import com.tommasomolesti.cassa_sagra_be.dto.UpdateArticleRequestDTO;
 import com.tommasomolesti.cassa_sagra_be.exception.AccessDeniedException;
+import com.tommasomolesti.cassa_sagra_be.exception.ArticleInUseException;
 import com.tommasomolesti.cassa_sagra_be.exception.ArticleNotFoundException;
 import com.tommasomolesti.cassa_sagra_be.exception.PartyNotFoundException;
 import com.tommasomolesti.cassa_sagra_be.mapper.ArticleMapper;
 import com.tommasomolesti.cassa_sagra_be.model.Article;
+import com.tommasomolesti.cassa_sagra_be.model.ArticleOrdered;
 import com.tommasomolesti.cassa_sagra_be.model.Party;
+import com.tommasomolesti.cassa_sagra_be.repository.ArticleOrderedRepository;
 import com.tommasomolesti.cassa_sagra_be.repository.ArticleRepository;
 import com.tommasomolesti.cassa_sagra_be.repository.PartyRepository;
 import org.springframework.stereotype.Service;
@@ -22,15 +25,18 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final PartyRepository partyRepository;
     private final ArticleMapper articleMapper;
+    private final ArticleOrderedRepository articleOrderedRepository;
 
     public ArticleService(
             ArticleRepository articleRepository,
             PartyRepository partyRepository,
-            ArticleMapper articleMapper
+            ArticleMapper articleMapper,
+            ArticleOrderedRepository articleOrderedRepository
     ) {
         this.articleRepository = articleRepository;
         this.partyRepository = partyRepository;
         this.articleMapper = articleMapper;
+        this.articleOrderedRepository = articleOrderedRepository;
     }
 
     public ArticleResponseDTO createArticle(ArticleRequestDTO articleRequest, UUID authenticatedUserId) {
@@ -85,6 +91,12 @@ public class ArticleService {
 
         if (!article.getParty().getCreator().getId().equals(authenticatedUserId)) {
             throw new AccessDeniedException("User is not authorized to access this article");
+        }
+
+        List<ArticleOrdered> ordersWithArticle = articleOrderedRepository.findAllByArticleId(id);
+
+        if (!ordersWithArticle.isEmpty()) {
+            throw new ArticleInUseException("Article with id " + id + " is in use by one or more orders and cannot be deleted.");
         }
 
         articleRepository.delete(article);
