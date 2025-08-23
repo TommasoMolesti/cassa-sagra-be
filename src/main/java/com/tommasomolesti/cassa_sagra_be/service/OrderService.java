@@ -48,6 +48,7 @@ public class OrderService {
         newOrder.setName(orderRequest.getName());
         newOrder.setParty(party);
         newOrder.setOrderCounter(newOrderCounter);
+        newOrder.setTotal(orderRequest.getTotal());
 
         Set<ArticleOrdered> orderedArticles = new HashSet<>();
         for (var itemDto : orderRequest.getItems()) {
@@ -79,6 +80,8 @@ public class OrderService {
 
         Order savedOrder = orderRepository.save(newOrder);
 
+        System.out.println("orderMapper.toDTO(savedOrder).getTotal() : " + orderMapper.toDTO(savedOrder).getTotal());
+
         return orderMapper.toDTO(savedOrder);
     }
 
@@ -100,7 +103,9 @@ public class OrderService {
             throw new AccessDeniedException("User is not authorized to view orders for this party");
         }
 
-        return party.getOrders().stream()
+        List<Order> orders = orderRepository.findAllByPartyId(partyId);
+
+        return orders.stream()
                 .map(orderMapper::toDTO)
                 .collect(Collectors.toList());
     }

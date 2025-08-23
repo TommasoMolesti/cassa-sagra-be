@@ -13,4 +13,5 @@ public class OrderResponseDTO {
     private int orderCounter;
     private LocalDateTime orderedTime;
     private List<ArticleOrderedResponseDTO> orderedArticles;
+    private Float total;
 }

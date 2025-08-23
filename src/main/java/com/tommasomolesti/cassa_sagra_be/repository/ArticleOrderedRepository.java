@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ArticleOrderedRepository extends JpaRepository<ArticleOrdered, Integer> {
@@ -17,4 +18,8 @@ public interface ArticleOrderedRepository extends JpaRepository<ArticleOrdered, 
             "GROUP BY ao.article.id, ao.article.name " +
             "ORDER BY ao.article.name ASC")
     List<PartyResumeDTO> getPartyResume(Integer partyId);
+    @Query("SELECT SUM(ao.quantity * ao.article.price) " +
+            "FROM ArticleOrdered ao " +
+            "WHERE ao.order.party.id = :partyId")
+    Optional<Double> calculateTotalRevenueByPartyId(Integer partyId);
 }

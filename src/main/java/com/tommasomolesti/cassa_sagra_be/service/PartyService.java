@@ -3,6 +3,7 @@ package com.tommasomolesti.cassa_sagra_be.service;
 import com.tommasomolesti.cassa_sagra_be.dto.PartyRequestDTO;
 import com.tommasomolesti.cassa_sagra_be.dto.PartyResponseDTO;
 import com.tommasomolesti.cassa_sagra_be.dto.PartyResumeDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.PartyTotalDTO;
 import com.tommasomolesti.cassa_sagra_be.exception.AccessDeniedException;
 import com.tommasomolesti.cassa_sagra_be.exception.PartyNotFoundException;
 import com.tommasomolesti.cassa_sagra_be.exception.UserNotFoundException;
@@ -94,5 +95,18 @@ public class PartyService {
         }
 
         return articleOrderedRepository.getPartyResume(partyId);
+    }
+
+    public PartyTotalDTO getPartyTotal(Integer partyId, UUID authenticatedUserId) {
+        Party party = partyRepository.findById(partyId)
+                .orElseThrow(() -> new PartyNotFoundException("Party not found with id: " + partyId));
+        if (!party.getCreator().getId().equals(authenticatedUserId)) {
+            throw new AccessDeniedException("User is not authorized to access this party's total");
+        }
+
+        double total = articleOrderedRepository.calculateTotalRevenueByPartyId(partyId)
+                .orElse(0.0);
+
+        return new PartyTotalDTO(total);
     }
 }

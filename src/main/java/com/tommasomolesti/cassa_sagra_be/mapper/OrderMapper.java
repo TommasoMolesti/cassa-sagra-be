@@ -10,6 +10,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface OrderMapper {
 
+    @Mapping(source = "total", target = "total")
     OrderResponseDTO toDTO(Order order);
 
     @Mapping(source = "article.id", target = "articleId")
