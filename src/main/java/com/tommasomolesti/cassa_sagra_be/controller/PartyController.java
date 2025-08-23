@@ -2,6 +2,7 @@ package com.tommasomolesti.cassa_sagra_be.controller;
 
 import com.tommasomolesti.cassa_sagra_be.dto.PartyRequestDTO;
 import com.tommasomolesti.cassa_sagra_be.dto.PartyResponseDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.PartyResumeDTO;
 import com.tommasomolesti.cassa_sagra_be.model.User;
 import com.tommasomolesti.cassa_sagra_be.service.PartyService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -63,5 +64,15 @@ public class PartyController {
         partyService.deleteParty(id, creatorId);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{partyId}/resume")
+    public ResponseEntity<List<PartyResumeDTO>> getPartyResume(
+            @PathVariable Integer partyId,
+            @AuthenticationPrincipal User currentUser
+    ) {
+        UUID userId = currentUser.getId();
+        List<PartyResumeDTO> resume = partyService.getPartyResume(partyId, userId);
+        return ResponseEntity.ok(resume);
     }
 }

@@ -2,12 +2,14 @@ package com.tommasomolesti.cassa_sagra_be.service;
 
 import com.tommasomolesti.cassa_sagra_be.dto.PartyRequestDTO;
 import com.tommasomolesti.cassa_sagra_be.dto.PartyResponseDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.PartyResumeDTO;
 import com.tommasomolesti.cassa_sagra_be.exception.AccessDeniedException;
 import com.tommasomolesti.cassa_sagra_be.exception.PartyNotFoundException;
 import com.tommasomolesti.cassa_sagra_be.exception.UserNotFoundException;
 import com.tommasomolesti.cassa_sagra_be.mapper.PartyMapper;
 import com.tommasomolesti.cassa_sagra_be.model.Party;
 import com.tommasomolesti.cassa_sagra_be.model.User;
+import com.tommasomolesti.cassa_sagra_be.repository.ArticleOrderedRepository;
 import com.tommasomolesti.cassa_sagra_be.repository.PartyRepository;
 import com.tommasomolesti.cassa_sagra_be.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -21,11 +23,18 @@ public class PartyService {
     private final PartyRepository partyRepository;
     private final PartyMapper partyMapper;
     private final UserRepository userRepository;
+    private final ArticleOrderedRepository articleOrderedRepository;
 
-    public PartyService(PartyRepository partyRepository, PartyMapper partyMapper, UserRepository userRepository) {
+    public PartyService(
+            PartyRepository partyRepository,
+            PartyMapper partyMapper,
+            UserRepository userRepository,
+            ArticleOrderedRepository articleOrderedRepository
+    ) {
         this.partyRepository = partyRepository;
         this.partyMapper = partyMapper;
         this.userRepository = userRepository;
+        this.articleOrderedRepository = articleOrderedRepository;
     }
 
     public List<PartyResponseDTO> getUserParties(UUID usedId) {
@@ -75,5 +84,15 @@ public class PartyService {
         }
 
         partyRepository.delete(party);
+    }
+
+    public List<PartyResumeDTO> getPartyResume(Integer partyId, UUID authenticatedUserId) {
+        Party party = partyRepository.findById(partyId)
+                .orElseThrow(() -> new PartyNotFoundException("Party not found with id: " + partyId));
+        if (!party.getCreator().getId().equals(authenticatedUserId)) {
+            throw new AccessDeniedException("User is not authorized to access this party's resume");
+        }
+
+        return articleOrderedRepository.getPartyResume(partyId);
     }
 }
