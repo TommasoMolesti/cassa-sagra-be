@@ -1,13 +1,13 @@
 package com.tommasomolesti.cassa_sagra_be.service;
 
 import com.tommasomolesti.cassa_sagra_be.dto.RegisterRequestDTO;
-import com.tommasomolesti.cassa_sagra_be.dto.UserRequestDTO;
 import com.tommasomolesti.cassa_sagra_be.dto.UserResponseDTO;
 import com.tommasomolesti.cassa_sagra_be.exception.EmailAlreadyExistsException;
 import com.tommasomolesti.cassa_sagra_be.exception.UserNotFoundException;
 import com.tommasomolesti.cassa_sagra_be.mapper.UserMapper;
 import com.tommasomolesti.cassa_sagra_be.model.User;
 import com.tommasomolesti.cassa_sagra_be.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -64,5 +64,14 @@ public class UserService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
+    @Transactional
+    public void deleteCurrentUser(UUID userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new UserNotFoundException("User not found with id: " + userId);
+        }
+
+        userRepository.deleteById(userId);
     }
 }
