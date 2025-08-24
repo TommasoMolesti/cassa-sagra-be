@@ -12,7 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginResponseDTO {
+    private String token;
     private String id;
     private String email;
-    private String token;
 }

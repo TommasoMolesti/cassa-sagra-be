@@ -52,8 +52,8 @@ public class AuthController {
         User authenticatedUser = (User) userDetails;
 
         LoginResponseDTO response = new LoginResponseDTO(
-                authenticatedUser.getId().toString(),
                 token,
+                authenticatedUser.getId().toString(),
                 authenticatedUser.getEmail()
         );
 
