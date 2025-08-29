@@ -8,4 +8,5 @@ import lombok.Setter;
 public class PartyResponseDTO {
     private String id;
     private String name;
+    private String createdAt;
 }
