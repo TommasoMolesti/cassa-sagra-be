@@ -1,7 +1,7 @@
 package com.tommasomolesti.cassa_sagra_be.controller;
 
-import com.tommasomolesti.cassa_sagra_be.dto.OrderRequestDTO;
-import com.tommasomolesti.cassa_sagra_be.dto.OrderResponseDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.order.OrderRequestDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.order.OrderResponseDTO;
 import com.tommasomolesti.cassa_sagra_be.model.User;
 import com.tommasomolesti.cassa_sagra_be.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,7 +25,7 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<OrderResponseDTO> createOrder(
-            @PathVariable Integer partyId,
+            @PathVariable UUID partyId,
             @RequestBody OrderRequestDTO orderRequest,
             @AuthenticationPrincipal User authenticatedUser
     ) {
@@ -37,7 +37,7 @@ public class OrderController {
     @GetMapping("/{orderId}")
     @Operation(summary = "Get an Order by ID")
     public ResponseEntity<OrderResponseDTO> getOrderById(
-            @PathVariable Integer orderId,
+            @PathVariable UUID orderId,
             @AuthenticationPrincipal User authenticatedUser
     ) {
         UUID userId = authenticatedUser.getId();
@@ -48,7 +48,7 @@ public class OrderController {
     @GetMapping("/list")
     @Operation(summary = "Get all orders from party")
     public ResponseEntity<List<OrderResponseDTO>> getOrdersList(
-            @PathVariable Integer partyId,
+            @PathVariable UUID partyId,
             @AuthenticationPrincipal User authenticatedUser
     ) {
         UUID userId = authenticatedUser.getId();
@@ -58,7 +58,7 @@ public class OrderController {
 
     @DeleteMapping("/{orderId}")
     public ResponseEntity<Void> deleteOrder(
-            @PathVariable Integer orderId,
+            @PathVariable UUID orderId,
             @AuthenticationPrincipal User authenticatedUser
     ) {
         UUID userId = authenticatedUser.getId();

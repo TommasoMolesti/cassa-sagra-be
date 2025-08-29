@@ -1,9 +1,9 @@
 package com.tommasomolesti.cassa_sagra_be.controller;
 
-import com.tommasomolesti.cassa_sagra_be.dto.LoginRequestDTO;
-import com.tommasomolesti.cassa_sagra_be.dto.LoginResponseDTO;
-import com.tommasomolesti.cassa_sagra_be.dto.RegisterRequestDTO;
-import com.tommasomolesti.cassa_sagra_be.dto.UserResponseDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.auth.LoginRequestDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.auth.LoginResponseDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.auth.RegisterRequestDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.user.UserResponseDTO;
 import com.tommasomolesti.cassa_sagra_be.security.JwtService;
 import com.tommasomolesti.cassa_sagra_be.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -1,6 +1,6 @@
 package com.tommasomolesti.cassa_sagra_be.controller;
 
-import com.tommasomolesti.cassa_sagra_be.dto.UserResponseDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.user.UserResponseDTO;
 import com.tommasomolesti.cassa_sagra_be.model.User;
 import com.tommasomolesti.cassa_sagra_be.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;

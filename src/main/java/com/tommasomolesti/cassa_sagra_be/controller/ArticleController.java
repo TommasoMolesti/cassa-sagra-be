@@ -1,8 +1,8 @@
 package com.tommasomolesti.cassa_sagra_be.controller;
 
-import com.tommasomolesti.cassa_sagra_be.dto.ArticleRequestDTO;
-import com.tommasomolesti.cassa_sagra_be.dto.ArticleResponseDTO;
-import com.tommasomolesti.cassa_sagra_be.dto.UpdateArticleRequestDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.article.ArticleRequestDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.article.ArticleResponseDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.article.UpdateArticleRequestDTO;
 import com.tommasomolesti.cassa_sagra_be.model.User;
 import com.tommasomolesti.cassa_sagra_be.service.ArticleService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,7 +38,7 @@ public class ArticleController {
 
     @GetMapping("/list/{partyId}")
     public ResponseEntity<List<ArticleResponseDTO>> getArticleList(
-            @PathVariable Integer partyId,
+            @PathVariable UUID partyId,
             @AuthenticationPrincipal User currentUser
     ) {
         UUID userId = currentUser.getId();
@@ -49,7 +49,7 @@ public class ArticleController {
     @GetMapping("{id}")
     @Operation(summary = "Get an Article by ID")
     public ResponseEntity<ArticleResponseDTO> getArticleById(
-            @PathVariable Integer id,
+            @PathVariable UUID id,
             @AuthenticationPrincipal User authenticatedUser
     ) {
         UUID creatorId = authenticatedUser.getId();
@@ -60,7 +60,7 @@ public class ArticleController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete an Article")
     public ResponseEntity<Void> deleteArticle(
-            @PathVariable Integer id,
+            @PathVariable UUID id,
             @AuthenticationPrincipal User authenticatedUser
     ) {
         UUID creatorId = authenticatedUser.getId();
@@ -71,7 +71,7 @@ public class ArticleController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ArticleResponseDTO> updateArticle(
-            @PathVariable Integer id,
+            @PathVariable UUID id,
             @RequestBody UpdateArticleRequestDTO updateRequest,
             @AuthenticationPrincipal User authenticatedUser
     ) {

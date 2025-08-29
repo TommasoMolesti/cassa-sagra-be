@@ -1,4 +1,4 @@
-package com.tommasomolesti.cassa_sagra_be.dto;
+package com.tommasomolesti.cassa_sagra_be.dto.party;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

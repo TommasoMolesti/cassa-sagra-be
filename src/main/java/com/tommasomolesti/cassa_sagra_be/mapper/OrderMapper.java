@@ -1,7 +1,7 @@
 package com.tommasomolesti.cassa_sagra_be.mapper;
 
-import com.tommasomolesti.cassa_sagra_be.dto.ArticleOrderedResponseDTO;
-import com.tommasomolesti.cassa_sagra_be.dto.OrderResponseDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.article.ArticleOrderedResponseDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.order.OrderResponseDTO;
 import com.tommasomolesti.cassa_sagra_be.model.ArticleOrdered;
 import com.tommasomolesti.cassa_sagra_be.model.Order;
 import org.mapstruct.Mapper;

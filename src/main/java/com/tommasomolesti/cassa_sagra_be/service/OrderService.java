@@ -1,7 +1,7 @@
 package com.tommasomolesti.cassa_sagra_be.service;
 
-import com.tommasomolesti.cassa_sagra_be.dto.OrderRequestDTO;
-import com.tommasomolesti.cassa_sagra_be.dto.OrderResponseDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.order.OrderRequestDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.order.OrderResponseDTO;
 import com.tommasomolesti.cassa_sagra_be.exception.ArticleNotFoundException;
 import com.tommasomolesti.cassa_sagra_be.exception.InsufficientStockException;
 import com.tommasomolesti.cassa_sagra_be.exception.OrderNotFoundException;
@@ -35,7 +35,7 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderResponseDTO createOrder(Integer partyId, OrderRequestDTO orderRequest, UUID authenticatedUserId) {
+    public OrderResponseDTO createOrder(UUID partyId, OrderRequestDTO orderRequest, UUID authenticatedUserId) {
         Party party = partyRepository.findById(partyId)
                 .orElseThrow(() -> new PartyNotFoundException("Party not found with id: " + partyId));
         if (!party.getCreator().getId().equals(authenticatedUserId)) {
@@ -85,7 +85,7 @@ public class OrderService {
         return orderMapper.toDTO(savedOrder);
     }
 
-    public OrderResponseDTO getOrderById(Integer id, UUID userId) {
+    public OrderResponseDTO getOrderById(UUID id, UUID userId) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new OrderNotFoundException("Order not found with this id: " + id));
         if(!order.getParty().getCreator().getId().equals(userId)) {
@@ -95,7 +95,7 @@ public class OrderService {
         return orderMapper.toDTO(order);
     }
 
-    public List<OrderResponseDTO> getOrdersList(Integer partyId, UUID userId) {
+    public List<OrderResponseDTO> getOrdersList(UUID partyId, UUID userId) {
         Party party = partyRepository.findById(partyId)
                 .orElseThrow(() -> new PartyNotFoundException("Party not found with id: " + partyId));
 
@@ -111,7 +111,7 @@ public class OrderService {
     }
 
     @Transactional
-    public void deleteOrder(Integer orderId, UUID authenticatedUserId) {
+    public void deleteOrder(UUID orderId, UUID authenticatedUserId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException("Order not found with id: " + orderId));
 

@@ -7,10 +7,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface OrderRepository extends JpaRepository<Order, Integer> {
+public interface OrderRepository extends JpaRepository<Order, UUID> {
     @Query("SELECT MAX(o.orderCounter) FROM Order o WHERE o.party.id = :partyId")
-    Optional<Integer> findMaxOrderCounterByPartyId(Integer partyId);
-    List<Order> findAllByPartyId(Integer partyId);
+    Optional<Integer> findMaxOrderCounterByPartyId(UUID partyId);
+    List<Order> findAllByPartyId(UUID partyId);
 }

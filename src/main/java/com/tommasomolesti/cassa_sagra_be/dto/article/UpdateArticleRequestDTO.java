@@ -1,4 +1,4 @@
-package com.tommasomolesti.cassa_sagra_be.dto;
+package com.tommasomolesti.cassa_sagra_be.dto.article;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

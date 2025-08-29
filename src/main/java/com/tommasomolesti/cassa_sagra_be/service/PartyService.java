@@ -1,9 +1,9 @@
 package com.tommasomolesti.cassa_sagra_be.service;
 
-import com.tommasomolesti.cassa_sagra_be.dto.PartyRequestDTO;
-import com.tommasomolesti.cassa_sagra_be.dto.PartyResponseDTO;
-import com.tommasomolesti.cassa_sagra_be.dto.PartyResumeDTO;
-import com.tommasomolesti.cassa_sagra_be.dto.PartyTotalDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.party.PartyRequestDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.party.PartyResponseDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.party.PartyResumeDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.party.PartyTotalDTO;
 import com.tommasomolesti.cassa_sagra_be.exception.AccessDeniedException;
 import com.tommasomolesti.cassa_sagra_be.exception.PartyNotFoundException;
 import com.tommasomolesti.cassa_sagra_be.exception.UserNotFoundException;
@@ -57,7 +57,7 @@ public class PartyService {
     }
 
     public PartyResponseDTO updateParty(
-            Integer partyId,
+            UUID partyId,
             PartyRequestDTO partyRequest,
             UUID authenticatedUserId
     ) {
@@ -76,7 +76,7 @@ public class PartyService {
     }
 
     @Transactional
-    public void deleteParty(Integer partyId, UUID authenticatedUserId) {
+    public void deleteParty(UUID partyId, UUID authenticatedUserId) {
         Party party = partyRepository.findById(partyId)
                 .orElseThrow(() -> new PartyNotFoundException("Party not found with id: " + partyId));
 
@@ -87,7 +87,7 @@ public class PartyService {
         partyRepository.delete(party);
     }
 
-    public List<PartyResumeDTO> getPartyResume(Integer partyId, UUID authenticatedUserId) {
+    public List<PartyResumeDTO> getPartyResume(UUID partyId, UUID authenticatedUserId) {
         Party party = partyRepository.findById(partyId)
                 .orElseThrow(() -> new PartyNotFoundException("Party not found with id: " + partyId));
         if (!party.getCreator().getId().equals(authenticatedUserId)) {
@@ -97,7 +97,7 @@ public class PartyService {
         return articleOrderedRepository.getPartyResume(partyId);
     }
 
-    public PartyTotalDTO getPartyTotal(Integer partyId, UUID authenticatedUserId) {
+    public PartyTotalDTO getPartyTotal(UUID partyId, UUID authenticatedUserId) {
         Party party = partyRepository.findById(partyId)
                 .orElseThrow(() -> new PartyNotFoundException("Party not found with id: " + partyId));
         if (!party.getCreator().getId().equals(authenticatedUserId)) {

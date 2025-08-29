@@ -1,7 +1,7 @@
 package com.tommasomolesti.cassa_sagra_be.mapper;
 
-import com.tommasomolesti.cassa_sagra_be.dto.UserRequestDTO;
-import com.tommasomolesti.cassa_sagra_be.dto.UserResponseDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.user.UserRequestDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.user.UserResponseDTO;
 import com.tommasomolesti.cassa_sagra_be.model.User;
 import org.mapstruct.Mapper;
 

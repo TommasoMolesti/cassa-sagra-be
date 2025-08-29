@@ -1,9 +1,9 @@
 package com.tommasomolesti.cassa_sagra_be.controller;
 
-import com.tommasomolesti.cassa_sagra_be.dto.PartyRequestDTO;
-import com.tommasomolesti.cassa_sagra_be.dto.PartyResponseDTO;
-import com.tommasomolesti.cassa_sagra_be.dto.PartyResumeDTO;
-import com.tommasomolesti.cassa_sagra_be.dto.PartyTotalDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.party.PartyRequestDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.party.PartyResponseDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.party.PartyResumeDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.party.PartyTotalDTO;
 import com.tommasomolesti.cassa_sagra_be.model.User;
 import com.tommasomolesti.cassa_sagra_be.service.PartyService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,7 +47,7 @@ public class PartyController {
 
     @PutMapping("/{id}")
     public ResponseEntity<PartyResponseDTO> updateParty(
-            @PathVariable Integer id,
+            @PathVariable UUID id,
             @RequestBody PartyRequestDTO partyRequest,
             @AuthenticationPrincipal User currentUser
     ) {
@@ -58,7 +58,7 @@ public class PartyController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteParty(
-            @PathVariable Integer id,
+            @PathVariable UUID id,
             @AuthenticationPrincipal User currentUser
     ) {
         UUID creatorId = currentUser.getId();
@@ -69,7 +69,7 @@ public class PartyController {
 
     @GetMapping("/{partyId}/resume")
     public ResponseEntity<List<PartyResumeDTO>> getPartyResume(
-            @PathVariable Integer partyId,
+            @PathVariable UUID partyId,
             @AuthenticationPrincipal User currentUser
     ) {
         UUID userId = currentUser.getId();
@@ -79,7 +79,7 @@ public class PartyController {
 
     @GetMapping("/{partyId}/total")
     public ResponseEntity<PartyTotalDTO> getPartyTotal(
-            @PathVariable Integer partyId,
+            @PathVariable UUID partyId,
             @AuthenticationPrincipal User currentUser
     ) {
         UUID userId = currentUser.getId();

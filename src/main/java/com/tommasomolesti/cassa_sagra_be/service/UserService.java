@@ -1,7 +1,7 @@
 package com.tommasomolesti.cassa_sagra_be.service;
 
-import com.tommasomolesti.cassa_sagra_be.dto.RegisterRequestDTO;
-import com.tommasomolesti.cassa_sagra_be.dto.UserResponseDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.auth.RegisterRequestDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.user.UserResponseDTO;
 import com.tommasomolesti.cassa_sagra_be.exception.EmailAlreadyExistsException;
 import com.tommasomolesti.cassa_sagra_be.exception.UserNotFoundException;
 import com.tommasomolesti.cassa_sagra_be.mapper.UserMapper;

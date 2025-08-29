@@ -1,8 +1,8 @@
 package com.tommasomolesti.cassa_sagra_be.service;
 
-import com.tommasomolesti.cassa_sagra_be.dto.ArticleRequestDTO;
-import com.tommasomolesti.cassa_sagra_be.dto.ArticleResponseDTO;
-import com.tommasomolesti.cassa_sagra_be.dto.UpdateArticleRequestDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.article.ArticleRequestDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.article.ArticleResponseDTO;
+import com.tommasomolesti.cassa_sagra_be.dto.article.UpdateArticleRequestDTO;
 import com.tommasomolesti.cassa_sagra_be.exception.AccessDeniedException;
 import com.tommasomolesti.cassa_sagra_be.exception.ArticleInUseException;
 import com.tommasomolesti.cassa_sagra_be.exception.ArticleNotFoundException;
@@ -40,7 +40,7 @@ public class ArticleService {
     }
 
     public ArticleResponseDTO createArticle(ArticleRequestDTO articleRequest, UUID authenticatedUserId) {
-        Integer partyId = articleRequest.getPartyId();
+        UUID partyId = articleRequest.getPartyId();
         Party party = partyRepository.findById(partyId)
                 .orElseThrow(() -> new PartyNotFoundException("Party not found with id: " + partyId));
 
@@ -61,7 +61,7 @@ public class ArticleService {
         return articleMapper.toDTO(savedArticle);
     }
 
-    public List<ArticleResponseDTO> getPartyArticles(UUID userId, Integer partyId) {
+    public List<ArticleResponseDTO> getPartyArticles(UUID userId, UUID partyId) {
         Party party = partyRepository.findById(partyId)
                 .orElseThrow(() -> new PartyNotFoundException("Party not found with id: " + partyId));
 
@@ -74,7 +74,7 @@ public class ArticleService {
                 .collect(Collectors.toList());
     }
 
-    public ArticleResponseDTO getArticleById(Integer id, UUID authenticatedUserId) {
+    public ArticleResponseDTO getArticleById(UUID id, UUID authenticatedUserId) {
         Article article = articleRepository.findById(id)
                 .orElseThrow(() -> new ArticleNotFoundException("Article not found with id: " + id));
 
@@ -85,7 +85,7 @@ public class ArticleService {
         return articleMapper.toDTO(article);
     }
 
-    public void deleteArticle(Integer id, UUID authenticatedUserId) {
+    public void deleteArticle(UUID id, UUID authenticatedUserId) {
         Article article = articleRepository.findById(id)
                 .orElseThrow(() -> new ArticleNotFoundException("Article not found with id: " + id));
 
@@ -103,7 +103,7 @@ public class ArticleService {
     }
 
     public ArticleResponseDTO updateArticle(
-            Integer articleId,
+            UUID articleId,
             UpdateArticleRequestDTO updateRequest,
             UUID authenticatedUserId
     ) {

@@ -1,4 +1,4 @@
-package com.tommasomolesti.cassa_sagra_be.dto;
+package com.tommasomolesti.cassa_sagra_be.dto.order;
 
 import lombok.Getter;
 import lombok.Setter;

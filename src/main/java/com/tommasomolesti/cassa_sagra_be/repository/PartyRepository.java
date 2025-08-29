@@ -8,6 +8,6 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface PartyRepository extends JpaRepository<Party, Integer> {
+public interface PartyRepository extends JpaRepository<Party, UUID> {
     List<Party> findAllByCreatorId(UUID creatorId);
 }
